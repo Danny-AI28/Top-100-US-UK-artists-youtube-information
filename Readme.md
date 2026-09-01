@@ -1,89 +1,188 @@
-# 🎵 Top 100 US-UK Artists - YouTube Data ETL Pipeline
+# 🎵 Top 100 US-UK Artists — YouTube Data ELT Pipeline
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![Google Cloud](https://img.shields.io/badge/Google_Cloud-VM_%7C_Storage-4285F4.svg)
+![Google Cloud](https://img.shields.io/badge/Google_Cloud-VM_%7C_BigQuery-4285F4.svg)
 ![YouTube API](https://img.shields.io/badge/YouTube_Data_API-v3-red.svg)
-![Data Engineering](https://img.shields.io/badge/Data-ETL_Pipeline-green.svg)
-
-## 📌 Tổng quan Dự án (Project Overview)
-Dự án là một hệ thống Data Pipeline toàn diện (End-to-End ETL) nhằm tự động hóa việc thu thập, xử lý và lưu trữ dữ liệu từ YouTube của Top 100 nghệ sĩ US-UK. Hệ thống giúp theo dõi các chỉ số quan trọng (lượt đăng ký, lượt xem, thông tin video, và bình luận), phục vụ trực tiếp cho việc phân tích và trực quan hóa trên Dashboard.
-
-**Tác giả:** Nguyễn Đoàn Hải Dương (Danny)
+![BigQuery](https://img.shields.io/badge/Data_Warehouse-BigQuery-669DF6.svg)
+![Pipeline](https://img.shields.io/badge/Pipeline-ELT-2ea44f.svg)
+![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
 
 ---
 
-## 🔄 Kiến trúc Hệ thống (Architecture Flowchart)
+## 📌 Tổng quan Dự án
 
-Hệ thống được thiết kế theo mô hình E-T-L (Extract - Transform - Load), vận hành tự động trên máy chủ Google Cloud (GCP VM) thông qua Crontab.
+Dự án là một hệ thống **Data Pipeline toàn diện (End-to-End ELT)** nhằm tự động hóa việc thu thập, tải và xử lý dữ liệu từ **YouTube Data API v3** cho Top 100 nghệ sĩ US-UK. Hệ thống theo dõi các chỉ số quan trọng — lượt đăng ký kênh, lượt xem, thông tin video và bình luận người dùng — phục vụ trực tiếp cho việc phân tích và trực quan hóa trên Dashboard.
+
+Khác với mô hình ETL truyền thống, pipeline này áp dụng **ELT (Extract → Load → Transform)**: dữ liệu thô được nạp thẳng vào **Google BigQuery** ngay sau khi crawl, sau đó các bước làm sạch và tổng hợp được thực hiện trực tiếp trên nền tảng data warehouse. Cách tiếp cận này tận dụng năng lực xử lý song song của BigQuery, giữ lại dữ liệu gốc để truy vết (data lineage), và giảm tải xử lý phía client.
+
+**Tác giả:** Nguyễn Đoàn Hải Dương (Danny)
+**Nguồn dữ liệu:** YouTube Data API v3
+**Data Warehouse:** Google BigQuery
+
+---
+
+## 🔄 Kiến trúc Hệ thống (Architecture)
+
+Hệ thống vận hành theo mô hình **E-L-T (Extract – Load – Transform)**, tự động hóa hoàn toàn trên máy chủ **Google Cloud VM** thông qua **Crontab**.
 
 ```mermaid
 graph TD
-    A[YouTube Data API v3] -->|Extract| B(Data Lake / Thư mục Local)
-    
-    subgraph ETL Pipeline [Python Automation]
-        B -->|Read| C[Transform Layer]
-        C -->|Clean, Format & Aggregate| D[Transformed Data]
-        D -->|Load| E[(Data Warehouse / Database)]
+    A[("YouTube Data API v3")] -->|"① Extract"| B["Local Staging / Data Lake"]
+
+    subgraph PIPELINE["ELT Pipeline — Python Automation trên GCP VM"]
+        B -->|"② Load thô (raw)"| C[("Google BigQuery — Raw Layer")]
+        C -->|"③ Transform (SQL / dbt-style)"| D[("Google BigQuery — Curated Layer")]
     end
-    
-    E -->|Live Connection| F[BI Tool]
-    F -->|Visualize| G((Interactive Dashboard))
-    
+
+    D -->|"Live Connection"| E["BI Tool"]
+    E -->|"Visualize"| F(("Interactive Dashboard"))
+
     classDef source fill:#f9d0c4,stroke:#333,stroke-width:2px;
-    classDef process fill:#d4e157,stroke:#333,stroke-width:2px;
+    classDef stage fill:#ffe082,stroke:#333,stroke-width:2px;
     classDef db fill:#81d4fa,stroke:#333,stroke-width:2px;
     classDef dashboard fill:#ce93d8,stroke:#333,stroke-width:2px;
-    
-    class A source;
-    class C,D process;
-    class E db;
-    class G dashboard;
 
+    class A source;
+    class B stage;
+    class C,D db;
+    class F dashboard;
+```
+
+**Luồng xử lý:**
+
+| Bước | Giai đoạn | Mô tả |
+|------|-----------|-------|
+| ① | **Extract** | Crawl dữ liệu kênh, video và bình luận từ YouTube Data API v3, lưu tạm dưới dạng file thô (CSV/JSON) trên VM |
+| ② | **Load** | Nạp dữ liệu thô trực tiếp lên BigQuery (Raw Layer) — không qua bước biến đổi trung gian |
+| ③ | **Transform** | Làm sạch, chuẩn hóa, xử lý missing values và tổng hợp dữ liệu bằng SQL ngay trên BigQuery (Curated Layer) |
+| ④ | **Visualize** | Kết nối trực tiếp BI Tool (Looker Studio/Power BI) tới Curated Layer để dựng Dashboard |
+
+---
+
+## 📂 Cấu trúc Thư mục
+
+```
 📦 BIG_PROJECT_1_DUONG_DANNY
  ┣ 📂 ETL_Top_100
- ┃ ┣ 📜 config.py               # Chứa các tham số hệ thống và đường dẫn
- ┃ ┣ 📜 a.extract.py            # Master script điều phối quá trình Extract
+ ┃ ┣ 📜 config.py               # Tham số hệ thống, đường dẫn, cấu hình BigQuery
+ ┃ ┣ 📜 a_extract.py            # Master script điều phối quá trình Extract
  ┃ ┣ 📜 b_channel_extract.py    # Crawl dữ liệu kênh (Subscribers, Views,...)
  ┃ ┣ 📜 c_video_extract.py      # Crawl dữ liệu video chi tiết
  ┃ ┗ 📜 d_comment_extract.py    # Crawl bình luận người dùng
- ┣ 📜 Transform_artists.py      # Module làm sạch dữ liệu Kênh
- ┣ 📜 Transform_video.py        # Module xử lý Missing values & Formatting
- ┣ 📜 Transform_comment.py      # Module xử lý Text Analytics
- ┣ 📜 Load_artists.py           # Module đẩy dữ liệu lên Database/Kho lưu trữ
- ┣ 📜 Load_video.py             
- ┣ 📜 Load_comment.py           
- ┣ 📜 main.py                   # Script điều phối toàn bộ quy trình ETL
- ┣ 📜 run_pipeline.sh           # Bash script để tự động hóa trên Linux/VM
+ ┣ 📜 Load_artists.py           # Nạp dữ liệu kênh thô lên BigQuery
+ ┣ 📜 Load_video.py             # Nạp dữ liệu video thô lên BigQuery
+ ┣ 📜 Load_comment.py           # Nạp dữ liệu bình luận thô lên BigQuery
+ ┣ 📜 Transform_artists.py      # Làm sạch & chuẩn hóa dữ liệu Kênh (SQL/BigQuery)
+ ┣ 📜 Transform_video.py        # Xử lý Missing values & Formatting
+ ┣ 📜 Transform_comment.py      # Text Analytics trên dữ liệu bình luận
+ ┣ 📜 main.py                   # Script điều phối toàn bộ quy trình ELT
+ ┣ 📜 run_pipeline.sh           # Bash script tự động hóa trên Linux/VM
  ┣ 📜 requirements.txt          # Danh sách thư viện Python
- ┣ 📜 .gitignore                # Quản lý các file ẩn và file data lớn (*.csv)
- ┗ 📜 pipeline.log              # Nhật ký vận hành hệ thống (Log file)
+ ┣ 📜 .env.example               # Mẫu biến môi trường (không chứa secret thật)
+ ┣ 📜 .gitignore                # Quản lý file ẩn và file data lớn (*.csv, *.json)
+ ┗ 📜 pipeline.log              # Nhật ký vận hành hệ thống
+```
 
-git clone [https://github.com/Danny-AI28/Top-100-US-UK-artists-youtube-information.git](https://github.com/Danny-AI28/Top-100-US-UK-artists-youtube-information.git)
+---
+
+## ⚙️ Công nghệ sử dụng
+
+| Thành phần | Công nghệ |
+|---|---|
+| Ngôn ngữ | Python 3.9+ |
+| Nguồn dữ liệu | YouTube Data API v3 |
+| Data Warehouse | Google BigQuery |
+| Hạ tầng | Google Cloud VM (Compute Engine) |
+| Lập lịch | Crontab |
+| BI/Visualization | Looker Studio / Power BI (tùy chọn) |
+
+---
+
+## 🚀 Cài đặt (Installation)
+
+```bash
+git clone https://github.com/Danny-AI28/Top-100-US-UK-artists-youtube-information.git
 cd Top-100-US-UK-artists-youtube-information
 
 # Tạo môi trường ảo
 python3 -m venv myenv
 
-# Kích hoạt (Trên Linux/macOS)
+# Kích hoạt (Linux/macOS)
 source myenv/bin/activate
-# Kích hoạt (Trên Windows)
+# Kích hoạt (Windows)
 # myenv\Scripts\activate
 
 # Cài đặt thư viện
 pip install -r requirements.txt
+```
 
+---
+
+## 🔐 Cấu hình (Configuration)
+
+Tạo file `.env` tại thư mục gốc dự án với nội dung sau:
+
+```env
 YOUTUBE_API_KEY=your_api_key_here
-DB_CONNECTION_STRING=your_database_url_here
+GCP_PROJECT_ID=your_gcp_project_id
+BIGQUERY_DATASET=your_bigquery_dataset
+GOOGLE_APPLICATION_CREDENTIALS=path/to/service_account.json
+```
 
-### Chạy Pipeline (Execution)
+> ⚠️ **Lưu ý:** Không commit file `.env` hoặc file service account credentials lên GitHub. Các file này đã được liệt kê trong `.gitignore`.
 
-**Chạy thủ công:**
+---
+
+## ▶️ Chạy Pipeline (Execution)
+
+### Chạy thủ công
+
 ```bash
 python3 main.py
+```
 
-### Chay tu dong
+### Chạy tự động (Crontab trên GCP VM)
 
+```bash
 chmod +x run_pipeline.sh
 crontab -e
-crontab -e
-0 16 * * * /đường_dẫn_tuyệt_đối_đến_thư_mục_project/run_pipeline.sh
+```
+
+Thêm dòng sau vào crontab để chạy pipeline mỗi ngày lúc 16:00:
+
+```bash
+0 16 * * * /đường_dẫn_tuyệt_đối_đến_thư_mục_project/run_pipeline.sh >> /đường_dẫn_tuyệt_đối/pipeline.log 2>&1
+```
+
+---
+
+## 📊 Kết quả đầu ra
+
+Sau khi pipeline chạy thành công, dữ liệu sẽ có sẵn trên **BigQuery** ở 2 layer:
+
+- **Raw Layer:** dữ liệu thô, nguyên bản từ YouTube API — phục vụ truy vết và audit
+- **Curated Layer:** dữ liệu đã làm sạch, chuẩn hóa, sẵn sàng cho phân tích và dashboard
+
+Từ Curated Layer, kết nối trực tiếp tới BI Tool để xây dựng dashboard theo dõi hiệu suất kênh/video theo thời gian thực.
+
+---
+
+## 🗺️ Định hướng phát triển (Roadmap)
+
+- [ ] Bổ sung xử lý lỗi & retry logic cho các cuộc gọi API
+- [ ] Thêm kiểm thử tự động (unit test) cho các module Transform
+- [ ] Triển khai orchestration bằng Airflow/Cloud Composer thay cho Crontab
+- [ ] Thêm cảnh báo (alerting) khi pipeline thất bại
+
+---
+
+## 👤 Tác giả
+
+**Nguyễn Đoàn Hải Dương (Danny)**
+📧 Liên hệ qua GitHub: [Danny-AI28](https://github.com/Danny-AI28)
+
+---
+
+## 📄 License
+
+Dự án được phát hành theo giấy phép [MIT License](LICENSE).
