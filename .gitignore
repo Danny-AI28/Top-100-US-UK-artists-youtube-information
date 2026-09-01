@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+key.json
+*.json.key
+service-account*.json
+storage.json
+Comments_Stat.csv
+FULL_Video_Details_Stat.csv
+*.csv
