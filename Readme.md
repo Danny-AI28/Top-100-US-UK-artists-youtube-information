@@ -64,24 +64,35 @@ graph TD
 ```
 📦 BIG_PROJECT_1_DUONG_DANNY
  ┣ 📂 ETL_Top_100
- ┃ ┣ 📜 config.py               # Tham số hệ thống, đường dẫn, cấu hình BigQuery
- ┃ ┣ 📜 a_extract.py            # Master script điều phối quá trình Extract
- ┃ ┣ 📜 b_channel_extract.py    # Crawl dữ liệu kênh (Subscribers, Views,...)
- ┃ ┣ 📜 c_video_extract.py      # Crawl dữ liệu video chi tiết
- ┃ ┗ 📜 d_comment_extract.py    # Crawl bình luận người dùng
- ┣ 📜 Load_artists.py           # Nạp dữ liệu kênh thô lên BigQuery
- ┣ 📜 Load_video.py             # Nạp dữ liệu video thô lên BigQuery
- ┣ 📜 Load_comment.py           # Nạp dữ liệu bình luận thô lên BigQuery
- ┣ 📜 Transform_artists.py      # Làm sạch & chuẩn hóa dữ liệu Kênh (SQL/BigQuery)
- ┣ 📜 Transform_video.py        # Xử lý Missing values & Formatting
- ┣ 📜 Transform_comment.py      # Text Analytics trên dữ liệu bình luận
- ┣ 📜 main.py                   # Script điều phối toàn bộ quy trình ELT
- ┣ 📜 run_pipeline.sh           # Bash script tự động hóa trên Linux/VM
- ┣ 📜 requirements.txt          # Danh sách thư viện Python
- ┣ 📜 .env.example               # Mẫu biến môi trường (không chứa secret thật)
- ┣ 📜 .gitignore                # Quản lý file ẩn và file data lớn (*.csv, *.json)
- ┗ 📜 pipeline.log              # Nhật ký vận hành hệ thống
+ ┃ ┣ 📂 __pycache__
+ ┃ ┣ 📂 myenv                    # Môi trường ảo Python (không commit lên Git)
+ ┃ ┣ 📜 __init__.py              # Đánh dấu package Python
+ ┃ ┣ 📜 .env                     # Biến môi trường: API key, thông tin BigQuery
+ ┃ ┣ 📜 config.py                # Tham số hệ thống, đường dẫn, cấu hình BigQuery
+ ┃ ┣ 📜 b_channel_extract.py     # Crawl dữ liệu kênh (Subscribers, Views,...)
+ ┃ ┣ 📜 c_video_extract.py       # Crawl dữ liệu video chi tiết
+ ┃ ┣ 📜 d_comment_extract.py     # Crawl bình luận người dùng
+ ┃ ┣ 📜 Load_artists.py          # Nạp dữ liệu kênh thô lên BigQuery
+ ┃ ┣ 📜 Load_video.py            # Nạp dữ liệu video thô lên BigQuery
+ ┃ ┣ 📜 Load_comment.py          # Nạp dữ liệu bình luận thô lên BigQuery
+ ┃ ┣ 📜 Transform_artists.py     # Làm sạch & chuẩn hóa dữ liệu Kênh (SQL/BigQuery)
+ ┃ ┣ 📜 Transform_video.py       # Xử lý Missing values & Formatting
+ ┃ ┗ 📜 Transform_comment.py     # Text Analytics trên dữ liệu bình luận
+ ┣ 📜 a.extract.py               # Master script điều phối toàn bộ quá trình Extract
+ ┣ 📜 main.py                    # Script điều phối toàn bộ quy trình ELT
+ ┣ 📜 run_pipeline.sh            # Bash script tự động hóa trên Linux/VM
+ ┣ 📜 requirements.txt           # Danh sách thư viện Python
+ ┣ 📜 .gitignore                 # Quản lý file ẩn và file data lớn (*.csv, *.json)
+ ┣ 📜 pipeline.log               # Nhật ký vận hành hệ thống
+ ┣ 📜 storage.json               # Trạng thái/checkpoint lưu trữ của pipeline
+ ┣ 📊 Top100artists.csv          # Dữ liệu output: danh sách kênh nghệ sĩ
+ ┣ 📊 Top100artistsStat.csv      # Dữ liệu output: thống kê kênh
+ ┣ 📊 Comments_Stat.csv          # Dữ liệu output: thống kê bình luận
+ ┣ 📊 FULL_Video_Details_Stat.csv # Dữ liệu output: chi tiết video
+ ┗ 📜 Readme.md
 ```
+
+> 📝 **Ghi chú:** Các file `.csv` và `storage.json` là dữ liệu/checkpoint sinh ra trong quá trình chạy pipeline — nên được thêm vào `.gitignore` nếu dung lượng lớn hoặc chứa dữ liệu nhạy cảm, thay vì commit trực tiếp lên GitHub.
 
 ---
 
@@ -120,7 +131,7 @@ pip install -r requirements.txt
 
 ## 🔐 Cấu hình (Configuration)
 
-Tạo file `.env` tại thư mục gốc dự án với nội dung sau:
+Tạo file `.env` tại thư mục `ETL_Top_100/` với nội dung sau:
 
 ```env
 YOUTUBE_API_KEY=your_api_key_here
