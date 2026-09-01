@@ -181,8 +181,3 @@ Từ Curated Layer, kết nối trực tiếp tới BI Tool để xây dựng da
 **Nguyễn Đoàn Hải Dương (Danny)**
 📧 Liên hệ qua GitHub: [Danny-AI28](https://github.com/Danny-AI28)
 
----
-
-## 📄 License
-
-Dự án được phát hành theo giấy phép [MIT License](LICENSE).
