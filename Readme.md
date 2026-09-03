@@ -189,6 +189,10 @@ Từ Curated Layer, kết nối trực tiếp tới BI Tool để xây dựng da
 **6. Kết quả bước 5**
 ![Result 5](Pictures/Result5.png)
 
+**7. Kết quả bước 6 (VM run)**
+![Result 7](Pictures/Result7.png)
+![Result 6](Pictures/Result6.png)
+
 ## 👤 Tác giả
 
 **Nguyễn Đoàn Hải Dương (Danny)**
