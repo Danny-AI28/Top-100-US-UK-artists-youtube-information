@@ -8,9 +8,9 @@
 
 ## Dashboard
 
-![Top 100 Artists Insights Dashboard](assets/dashboard.png)
+![Top 100 Artists Insights Dashboard](Dashboard.png)
 
-Link Dashboard: [https://your-dashboard-url.com](https://your-dashboard-url.com)
+Link Dashboard: [https://your-dashboard-url.com](https://datastudio.google.com/reporting/b8fbbc19-831b-4099-999c-242c05a1f2fe)
 
 ---
 
