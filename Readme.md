@@ -169,7 +169,25 @@ Từ Curated Layer, kết nối trực tiếp tới BI Tool để xây dựng da
 - [ ] Triển khai orchestration bằng Airflow/Cloud Composer thay cho Crontab
 - [ ] Thêm cảnh báo (alerting) khi pipeline thất bại
 
----
+## Kết quả
+
+**1. Dashboard tổng quan**
+![Dashboard](assets/Dashboard.png)
+
+**2. Kết quả bước 1**
+![Result 1](assets/Result1.png)
+
+**3. Kết quả bước 2**
+![Result 2](assets/Result2.png)
+
+**4. Kết quả bước 3**
+![Result 3](assets/Result3.png)
+
+**5. Kết quả bước 4**
+![Result 4](assets/Result4.png)
+
+**6. Kết quả bước 5**
+![Result 5](assets/Result5.png)
 
 ## 👤 Tác giả
 
