@@ -5,7 +5,12 @@
 ![YouTube API](https://img.shields.io/badge/YouTube_Data_API-v3-red.svg)
 ![BigQuery](https://img.shields.io/badge/Data_Warehouse-BigQuery-669DF6.svg)
 ![Pipeline](https://img.shields.io/badge/Pipeline-ELT-2ea44f.svg)
-![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
+
+## Dashboard
+
+![Top 100 Artists Insights Dashboard](assets/dashboard.png)
+
+Link Dashboard: [https://your-dashboard-url.com](https://your-dashboard-url.com)
 
 ---
 
@@ -24,8 +29,6 @@ Khác với mô hình ETL truyền thống, pipeline này áp dụng **ELT (Extr
 ## 🔄 Kiến trúc Hệ thống (Architecture)
 
 Hệ thống vận hành theo mô hình **E-L-T (Extract – Load – Transform)**, tự động hóa hoàn toàn trên máy chủ **Google Cloud VM** thông qua **Crontab**.
-
-> 💡 Nếu sơ đồ Mermaid bên dưới không hiện trên trang GitHub (thường do dấu ngoặc kép/emoji trong label bị đổi thành "smart quote" khi copy-paste, hoặc trình duyệt cache cũ), ảnh tĩnh dự phòng ngay dưới sẽ luôn hiển thị được, không phụ thuộc vào việc GitHub có render Mermaid hay không.
 
 <img src="https://mermaid.ink/img/Z3JhcGggVEQKICAgIEFbWW91VHViZSBEYXRhIEFQSSB2M10gLS0+fEV4dHJhY3R8IEJbTG9jYWwgU3RhZ2luZ10KCiAgICBzdWJncmFwaCBQSVBFTElORVtFTFQgUGlwZWxpbmUgLSBQeXRob24gQXV0b21hdGlvbiB0cmVuIEdDUCBWTV0KICAgICAgICBCIC0tPnxMb2FkIHJhd3wgQ1soQmlnUXVlcnkgUmF3IExheWVyKV0KICAgICAgICBDIC0tPnxUcmFuc2Zvcm0gU1FMfCBEWyhCaWdRdWVyeSBDdXJhdGVkIExheWVyKV0KICAgIGVuZAoKICAgIEQgLS0+fExpdmUgQ29ubmVjdGlvbnwgRVtCSSBUb29sXQogICAgRSAtLT58VmlzdWFsaXplfCBGKChJbnRlcmFjdGl2ZSBEYXNoYm9hcmQpKQoKICAgIGNsYXNzRGVmIHNvdXJjZSBmaWxsOiNmOWQwYzQsc3Ryb2tlOiMzMzMsc3Ryb2tlLXdpZHRoOjJweDsKICAgIGNsYXNzRGVmIHN0YWdlIGZpbGw6I2ZmZTA4MixzdHJva2U6IzMzMyxzdHJva2Utd2lkdGg6MnB4OwogICAgY2xhc3NEZWYgZGIgZmlsbDojODFkNGZhLHN0cm9rZTojMzMzLHN0cm9rZS13aWR0aDoycHg7CiAgICBjbGFzc0RlZiBkYXNoYm9hcmQgZmlsbDojY2U5M2Q4LHN0cm9rZTojMzMzLHN0cm9rZS13aWR0aDoycHg7CgogICAgY2xhc3MgQSBzb3VyY2U7CiAgICBjbGFzcyBCIHN0YWdlOwogICAgY2xhc3MgQyxEIGRiOwogICAgY2xhc3MgRiBkYXNoYm9hcmQ7Cg==" alt="ELT Pipeline Architecture" width="700"/>
 
