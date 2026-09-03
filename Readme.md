@@ -172,22 +172,22 @@ Từ Curated Layer, kết nối trực tiếp tới BI Tool để xây dựng da
 ## Kết quả
 
 **1. Dashboard tổng quan**
-![Dashboard](assets/Dashboard.png)
+![Dashboard](Pictures/Dashboard.png)
 
 **2. Kết quả bước 1**
-![Result 1](assets/Result1.png)
+![Result 1](Pictures/Result1.png)
 
 **3. Kết quả bước 2**
-![Result 2](assets/Result2.png)
+![Result 2](Pictures/Result2.png)
 
 **4. Kết quả bước 3**
-![Result 3](assets/Result3.png)
+![Result 3](Pictures/Result3.png)
 
 **5. Kết quả bước 4**
-![Result 4](assets/Result4.png)
+![Result 4](Pictures/Result4.png)
 
 **6. Kết quả bước 5**
-![Result 5](assets/Result5.png)
+![Result 5](Pictures/Result5.png)
 
 ## 👤 Tác giả
 
