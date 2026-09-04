@@ -20,6 +20,8 @@ Dự án là một hệ thống **Data Pipeline toàn diện (End-to-End ELT)** 
 
 Khác với mô hình ETL truyền thống, pipeline này áp dụng **ELT (Extract → Load → Transform)**: dữ liệu thô được nạp thẳng vào **Google BigQuery** ngay sau khi crawl, sau đó các bước làm sạch và tổng hợp được thực hiện trực tiếp trên nền tảng data warehouse. Cách tiếp cận này tận dụng năng lực xử lý song song của BigQuery, giữ lại dữ liệu gốc để truy vết (data lineage), và giảm tải xử lý phía client.
 
+**Do đặc thù dữ liệu thường xuyên biến động theo thời gian, phương pháp Full Load được áp dụng để nạp dữ liệu nhằm đảm bảo tính đồng bộ và chính xác."**
+
 **Tác giả:** Nguyễn Đoàn Hải Dương (Danny)
 **Nguồn dữ liệu:** YouTube Data API v3
 **Data Warehouse:** Google BigQuery
